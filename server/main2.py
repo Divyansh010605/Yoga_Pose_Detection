@@ -1,33 +1,13 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 # In[22]:
-
 
 import cv2
 import mediapipe as mp
 import numpy as np
 import pandas as pd
-import time
-import datetime
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import math
-from mpl_toolkits import mplot3d
-from celluloid import Camera
-from scipy import spatial
-import pyshine as ps
-
 
 mp_drawing = mp.solutions.drawing_utils
 mp_pose = mp.solutions.pose
-
-
-# In[23]:
-
 
 def calculateAngle(a, b, c):
     a = np.array(a)
@@ -42,10 +22,6 @@ def calculateAngle(a, b, c):
         angle = 360 - angle
 
     return angle
-
-
-# In[24]:
-
 
 # cap = cv2.VideoCapture(0)
 # 2D
@@ -161,7 +137,7 @@ def extractKeypoint(path):
                         },
                         index=[0],
                     )
-                    joint_list = joint_list.append(joints, ignore_index=True)
+                    joint_list = pd.concat([joint_list, joints], ignore_index=True)
 
                 keypoints = []
                 for point in landmarks:
@@ -289,7 +265,7 @@ def extractKeypoint(path):
 
             except:
                 pass
-            joint_list_video = joint_list_video.append(joint_list, ignore_index=True)
+            joint_list_video = pd.concat([joint_list_video, joint_list], ignore_index=True)
             cv2.rectangle(image, (0, 0), (100, 255), (255, 255, 255), -1)
 
             cv2.putText(
@@ -490,10 +466,6 @@ def extractKeypoint(path):
 
         cv2.destroyAllWindows()
     return landmarks, keypoints, angle, image
-
-
-# In[25]:
-
 
 def classifyPose(landmarks, output_image, display=False):
 
@@ -749,10 +721,6 @@ def classifyPose(landmarks, output_image, display=False):
 
         return output_image, label
 
-
-# In[26]:
-
-
 def detectPose(image, pose, display=True):
 
     output_image = image.copy()
@@ -796,12 +764,7 @@ def detectPose(image, pose, display=True):
     else:
         return output_image, landmarks
 
-
-# In[ ]:
-
-
 # In[27]:
-
 
 def compare_pose(image, angle_point, angle_user, angle_target):
     angle_user = np.array(angle_user)
@@ -1185,16 +1148,8 @@ def compare_pose(image, angle_point, angle_user, angle_target):
             cv2.LINE_AA,
         )
 
-
-# In[28]:
-
-
 def Average(lst):
     return sum(lst) / len(lst)
-
-
-# In[29]:
-
 
 def dif_compare(x, y):
     average = []
@@ -1205,10 +1160,6 @@ def dif_compare(x, y):
     # print(Average(average))
     return score
 
-
-# In[30]:
-
-
 def diff_compare_angle(x, y):
     new_x = []
     for i, j in zip(range(len(x)), range(len(y))):
@@ -1216,10 +1167,6 @@ def diff_compare_angle(x, y):
         new_x.append(z)
         # print(new_x[i])
     return Average(new_x)
-
-
-# In[31]:
-
 
 def convert_data(landmarks):
     df = pd.DataFrame(columns=["x", "y", "z", "vis"])
@@ -1234,10 +1181,6 @@ def convert_data(landmarks):
             ignore_index=True,
         )
     return df
-
-
-# In[32]:
-
 
 cap = cv2.VideoCapture(0)
 # path = "Video/yoga19.jpg"
